@@ -9,11 +9,13 @@ import shlex
 
 load_dotenv('.env')
 client = commands.Bot(command_prefix=PREFIX, intents=discord.Intents.all())
-target_guild = None
 
 @client.event
 async def on_ready():
     print('Ready')
+    
+    target_guild = None
+    message = 'Glory to the GCS!'
     
     while True:
         input_text = input('$ ')
@@ -54,7 +56,19 @@ async def on_ready():
             target_guild = guild
             print(f'Set target guild to {guild.name}')
         elif arguments[0] == 'setmsg':
-            pass
+            if len(arguments) < 2:
+                try:
+                    print(message)
+                except:
+                    print('No set message')
+                continue
+
+            if arguments[1] == 'none':
+                message = 'Glory to the GCS!'
+                print('Set message to default')
+            else:
+                message = arguments[1]
+                print('Set message to {}'.format(arguments[1]))
         elif arguments[0] == 'run':
             pass
         else:
