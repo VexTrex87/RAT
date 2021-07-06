@@ -1,5 +1,5 @@
 PREFIX = "$"
-SEND_DELAY = 1
+SEND_DELAY = 0.5
 
 import discord
 from discord.ext import commands
@@ -91,7 +91,7 @@ async def on_ready():
                 for webhook in webhooks:
                     await webhook.send(message)
                     print(f'Fired webhook {webhook.url}')
-                    # await asyncio.sleep(SEND_DELAY)
+                await asyncio.sleep(SEND_DELAY)
 
         else:
             print('Invalid command')
